@@ -1,0 +1,12 @@
+[package]
+name = "xdg_desktop_portal_wayland"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pipewire = "0.8.0"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+wayland-client = "0.31.2"
+wayland-protocols-wlr = { version = "0.2.0", features = ["client"] }
+zbus = "4.2.2"
