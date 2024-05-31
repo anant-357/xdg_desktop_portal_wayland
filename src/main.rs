@@ -3,6 +3,7 @@ use tracing::Level;
 
 use crate::portal::DesktopPortalSession;
 
+mod comm;
 mod portal;
 mod screencast;
 mod session;
@@ -15,7 +16,8 @@ fn initialize_tracing() {
         .init();
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     initialize_tracing();
     let session = DesktopPortalSession::new();
     println!("Hello, world!");
