@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use zbus::{
-    interface,
+    self, interface,
     zvariant::{ObjectPath, Value},
 };
 
@@ -19,14 +19,15 @@ pub enum CursorModes {
     Metadata = 4,
 }
 
-pub struct ScreenCast {
-    available_source_types: Vec<SourceTypes>,
-    available_cursor_modes: Vec<CursorModes>,
-    version: u8,
-}
+pub struct ScreenCast;
 
 #[interface(name = "org.freedesktop.impl.portal.ScreenCast")]
 impl ScreenCast {
+    #[zbus(property, name = "version")]
+    fn version(&self) -> u8 {
+        4
+    }
+
     async fn create_session(
         &self,
         request_handle: ObjectPath<'_>,

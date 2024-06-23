@@ -3,10 +3,10 @@ use tracing::Level;
 
 use crate::portal::DesktopPortalSession;
 
+mod backends;
 mod comm;
+mod config;
 mod portal;
-mod screencast;
-mod session;
 
 fn initialize_tracing() {
     tracing_subscriber::fmt()
