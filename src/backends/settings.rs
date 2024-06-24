@@ -15,26 +15,30 @@ const COLOR_SCHEME: &str = "color-scheme";
 const ACCENT_COLOR: &str = "accent-color";
 
 pub static SETTING_CONFIG: Lazy<Arc<Mutex<SettingsConfig>>> =
-    Lazy::new(|| Arc::new(Mutex::new(SettingsConfig::from_file())));
+    Lazy::new(|| Arc::new(Mutex::new(SettingsConfig::from_config())));
+
 pub struct Settings;
 
 #[interface(name = "org.freedesktop.impl.portal.Settings")]
 impl Settings {
     #[zbus(property, name = "version")]
     fn version(&self) -> u32 {
+        tracing::trace!("Returning version");
         1
     }
 
-    async fn read(&self, namespace: String, key: String) -> fdo::Result<OwnedValue> {
+    async fn read_one(&self, namespace: String, key: String) -> fdo::Result<OwnedValue> {
         if namespace != APPEARANCE {
             return Err(zbus::fdo::Error::Failed("no such namespace".to_string()));
         }
-        let mut output = HashMap::<String, OwnedValue>::new();
         let config = SETTING_CONFIG.lock().await;
-        output.insert(COLOR_SCHEME.to_string(), config.get_color_scheme().into());
-        output.insert(ACCENT_COLOR.to_string(), config.get_accent_color().into());
-
-        Ok(output.into())
+        if key == COLOR_SCHEME {
+            return Ok(config.get_color_scheme().into());
+        } else if key == ACCENT_COLOR {
+            return Ok(config.get_accent_color().into());
+        } else {
+            return Err(zbus::fdo::Error::Failed("no such key".to_string()));
+        }
     }
 
     async fn read_all(&self, namespace: String) -> fdo::Result<OwnedValue> {

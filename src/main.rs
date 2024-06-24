@@ -11,7 +11,7 @@ mod portal;
 fn initialize_tracing() {
     tracing_subscriber::fmt()
         .with_level(true)
-        .with_max_level(Level::TRACE)
+        .with_max_level(Level::INFO)
         .with_writer(io::stderr)
         .init();
 }
@@ -19,6 +19,8 @@ fn initialize_tracing() {
 #[tokio::main]
 async fn main() {
     initialize_tracing();
-    let session = DesktopPortalSession::new();
-    println!("Hello, world!");
+    std::env::set_var("RUST_LOG", "xdg-desktop-protal-luminous=info");
+    tracing::trace!("Initialized tracing!");
+    let session = DesktopPortalSession::new().await.unwrap();
+    let _ = session.start().await;
 }

@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use serde::Serialize;
 use zbus::{interface, zvariant};
 pub struct Request {
     pub handle_path: zvariant::OwnedObjectPath,
